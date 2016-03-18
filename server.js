@@ -1,36 +1,25 @@
 var express = require('express');
-var http = require('http');
 var app = express();
+var bodyParser = require('body-parser');
 
-function sendToPi(data){
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-  var options = {
-    host: 'localhost',
-    port: 3001,
-    path: '/pi?data='+data,
-    method: 'POST'
-  };
-
-  http.request(options, function(res) {
-    console.log('STATUS: ' + res.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(res.headers));
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      console.log('BODY: ' + chunk);
-    });
-  }).end();
-
-  return true;
-
-}
-
-app.get('/do', function(req, res) {
-  res.send('some info for pi');
+app.get('/xorapi/v1/light', function(req, res) {
+  // returns state from Raspberry Pi;
+  res.json('On');
 });
 
-app.post('/do', function(req, res) {
-  // res.send(req.query);
-  res.json(sendToPi(req.query.data));
+app.post('/xorapi/v1/light/:objectNum/:room/:roomNum/:state', function(req, res) {
+  var obj = {
+    objectNum: req.params.objectNum,
+    room: req.params.room,
+    roomNum: req.params.roomNum,
+    state: req.params.state
+  }
+
+  res.json(obj);
+
 });
 
 app.listen(3000, function () {
