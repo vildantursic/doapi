@@ -7,7 +7,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 
 app.get('/xorapi/v1/light', function(req, res) {
   // returns state from Raspberry Pi;
-  res.json('On');
+  res.json('On / Off');
 });
 
 app.post('/xorapi/v1/light/:objectNum/:room/:roomNum/:state', function(req, res) {
